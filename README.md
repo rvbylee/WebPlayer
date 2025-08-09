@@ -31,3 +31,16 @@ Access to script at 'file:///Users/jht2/Documents/projects/_molab-repos/_course-
 
 
 ```
+
+```
+
+WebViewAlertsView
+
+ https://claude.ai/chat/6d205393-3949-4c29-8683-772c677510ca
+ handling alert in WKWebView
+ convert to swiftUI
+ Referencing instance method 'onChange(of:initial:_:)' on 'Optional' requires that 'AlertData' conform to 'Equatable'
+ Example url does not trigger alert, confirm or prompt
+
+```
+
