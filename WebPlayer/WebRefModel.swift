@@ -13,6 +13,7 @@ class WebRefModel : NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessag
   
   func makeWebView() -> WKWebView  {
     if let webView  {
+      webView.loadHTMLString("<html><body><h1>Loading.../h1></body></html>", baseURL: nil)
       return webView
     }
     let webConfiguration = WKWebViewConfiguration()
