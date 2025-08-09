@@ -1,4 +1,14 @@
+//
+//  WebRefModel.swift
+//  WebPlayer
+//
+//  Created by jht2 on 8/8/25.
+//
+
+@preconcurrency import WebKit
+
 class WebRefModel : NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler  {
+  
   var webView: WKWebView?
   
   func makeWebView() -> WKWebView  {
@@ -92,7 +102,6 @@ class WebRefModel : NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessag
     if (navigationAction.navigationType != .other) {
       webView.load(navigationAction.request);
     }
-    
   }
   
   func webView(
