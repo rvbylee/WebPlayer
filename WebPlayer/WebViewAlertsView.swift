@@ -17,8 +17,8 @@ struct WebViewWithAlerts: View {
   @State private var promptCompletion: ((String?) -> Void)?
   
   var body: some View {
-    WebView(
-      url: url,
+    WebViewWithHTML(
+      htmlContent: TestHTMLGenerator.generateTestHTML(),
       onAlert: handleAlert,
       onConfirm: handleConfirm,
       onPrompt: handlePrompt
@@ -135,8 +135,8 @@ struct StyledWebViewWithAlerts: View {
   @State private var alertData: AlertData?
   
   var body: some View {
-    WebView(
-      url: url,
+    WebViewWithHTML(
+      htmlContent: TestHTMLGenerator.generateTestHTML(),
       onAlert: { message, completion in
         alertData = AlertData(
           type: .alert,
@@ -161,6 +161,32 @@ struct StyledWebViewWithAlerts: View {
       }
     )
     .customAlert(alertData: $alertData)
+  }
+}
+
+// MARK: - WebView with HTML Content
+struct WebViewWithHTML: UIViewRepresentable {
+  let htmlContent: String
+  let onAlert: (String, @escaping () -> Void) -> Void
+  let onConfirm: (String, @escaping (Bool) -> Void) -> Void
+  let onPrompt: (String, String?, @escaping (String?) -> Void) -> Void
+  
+  func makeUIView(context: Context) -> WKWebView {
+    let webView = WKWebView()
+    webView.uiDelegate = context.coordinator
+    return webView
+  }
+  
+  func updateUIView(_ webView: WKWebView, context: Context) {
+    webView.loadHTMLString(htmlContent, baseURL: nil)
+  }
+  
+  func makeCoordinator() -> WebView.Coordinator {
+    WebView.Coordinator(
+      onAlert: onAlert,
+      onConfirm: onConfirm,
+      onPrompt: onPrompt
+    )
   }
 }
 
@@ -220,7 +246,6 @@ struct CustomAlertModifier: ViewModifier {
           onDismiss: { alertData = nil }
         )
       }
-    // !!@ removed _
       .onChange(of: alertData) { newValue in
         if let data = newValue {
           textInput = data.defaultText ?? ""
@@ -295,18 +320,129 @@ struct CustomAlertView: View {
   }
 }
 
+// MARK: - Test HTML Generator
+class TestHTMLGenerator {
+  static func generateTestHTML() -> String {
+    return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>WebView Alert Test</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                    padding: 20px;
+                    background-color: #f5f5f5;
+                }
+                .container {
+                    max-width: 400px;
+                    margin: 0 auto;
+                    background: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                button {
+                    display: block;
+                    width: 100%;
+                    padding: 15px;
+                    margin: 10px 0;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                .alert-btn { background-color: #007AFF; color: white; }
+                .confirm-btn { background-color: #FF9500; color: white; }
+                .prompt-btn { background-color: #34C759; color: white; }
+                button:hover { opacity: 0.8; }
+                .result { 
+                    margin-top: 20px; 
+                    padding: 10px; 
+                    background-color: #f0f0f0; 
+                    border-radius: 5px;
+                    min-height: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>WebView Alert Test Page</h2>
+                <p>Click the buttons below to test different JavaScript dialogs:</p>
+                
+                <button class="alert-btn" onclick="testAlert()">
+                    Test Alert Dialog
+                </button>
+                
+                <button class="confirm-btn" onclick="testConfirm()">
+                    Test Confirm Dialog
+                </button>
+                
+                <button class="prompt-btn" onclick="testPrompt()">
+                    Test Prompt Dialog
+                </button>
+                
+                <button class="alert-btn" onclick="testMultiple()">
+                    Test Multiple Alerts
+                </button>
+                
+                <div id="result" class="result">
+                    Results will appear here...
+                </div>
+            </div>
+            
+            <script>
+                function testAlert() {
+                    alert('This is a JavaScript alert!\\n\\nIt should be handled by your WKWebView delegate.');
+                    document.getElementById('result').innerHTML = 'Alert dialog was shown';
+                }
+                
+                function testConfirm() {
+                    const result = confirm('Do you want to proceed?\\n\\nClick OK or Cancel to test the confirm dialog.');
+                    document.getElementById('result').innerHTML = `Confirm result: ${result ? 'OK was clicked' : 'Cancel was clicked'}`;
+                }
+                
+                function testPrompt() {
+                    const result = prompt('Please enter your name:', 'Default Name');
+                    document.getElementById('result').innerHTML = `Prompt result: ${result !== null ? `"${result}"` : 'Cancelled'}`;
+                }
+                
+                function testMultiple() {
+                    alert('First alert');
+                    if (confirm('Show second alert?')) {
+                        const name = prompt('Enter your name:');
+                        alert(`Hello, ${name || 'Anonymous'}!`);
+                    }
+                    document.getElementById('result').innerHTML = 'Multiple dialog sequence completed';
+                }
+                
+                // Auto-run a test alert after 2 seconds
+                setTimeout(() => {
+                    if (confirm('Welcome! This page will test JavaScript dialogs.\\n\\nClick OK to continue or Cancel to skip auto-tests.')) {
+                        document.getElementById('result').innerHTML = 'Welcome dialog completed - try the buttons above!';
+                    }
+                }, 2000);
+            </script>
+        </body>
+        </html>
+        """
+  }
+}
+
 // MARK: - Usage Examples
 struct WebViewAlertsView: View {
   var body: some View {
     NavigationView {
       VStack(spacing: 20) {
         NavigationLink("Basic Alert Handling") {
-          WebViewWithAlerts(url: URL(string: "https://example.com")!)
+          TestWebView(useCustomStyling: false)
             .navigationTitle("Basic Alerts")
         }
         
         NavigationLink("Custom Styled Alerts") {
-          StyledWebViewWithAlerts(url: URL(string: "https://example.com")!)
+          TestWebView(useCustomStyling: true)
             .navigationTitle("Custom Alerts")
         }
       }
@@ -315,18 +451,66 @@ struct WebViewAlertsView: View {
   }
 }
 
+// MARK: - Test WebView with Local HTML
+struct TestWebView: View {
+  let useCustomStyling: Bool
+  @State private var webView: WKWebView?
+  
+  var body: some View {
+    VStack {
+      if useCustomStyling {
+        StyledWebViewWithAlerts(url: URL(string: "about:blank")!)
+          .onAppear {
+            loadTestHTML()
+          }
+      } else {
+        WebViewWithAlerts(url: URL(string: "about:blank")!)
+          .onAppear {
+            loadTestHTML()
+          }
+      }
+    }
+    .navigationBarTitleDisplayMode(.inline)
+  }
+  
+  private func loadTestHTML() {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+      // Find the webview and load HTML
+      if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+         let window = windowScene.windows.first {
+        loadHTMLInWebView(in: window.rootViewController)
+      }
+    }
+  }
+  
+  private func loadHTMLInWebView(in viewController: UIViewController?) {
+    guard let vc = viewController else { return }
+    
+    // Recursively find WKWebView
+    func findWebView(in view: UIView) -> WKWebView? {
+      if let webView = view as? WKWebView {
+        return webView
+      }
+      for subview in view.subviews {
+        if let webView = findWebView(in: subview) {
+          return webView
+        }
+      }
+      return nil
+    }
+    
+    if let webView = findWebView(in: vc.view) {
+      let html = TestHTMLGenerator.generateTestHTML()
+      webView.loadHTMLString(html, baseURL: nil)
+    } else {
+      // Try in child view controllers
+      for child in vc.children {
+        loadHTMLInWebView(in: child)
+      }
+    }
+  }
+}
+
 #Preview {
   WebViewAlertsView()
 }
-
-/*
- 
- https://claude.ai/chat/6d205393-3949-4c29-8683-772c677510ca
- handling alert in WKWebView
- convert to swiftUI
- Referencing instance method 'onChange(of:initial:_:)' on 'Optional' requires that 'AlertData' conform to 'Equatable'
- Example url does not trigger alert, confirm or prompt
- 
-
-
- */
