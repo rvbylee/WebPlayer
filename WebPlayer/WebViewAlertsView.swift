@@ -1,10 +1,3 @@
-//
-//  Untitled.swift
-//  WebPlayer
-//
-//  Created by jht2 on 8/8/25.
-//
-
 import SwiftUI
 @preconcurrency import WebKit
 
@@ -172,11 +165,12 @@ struct StyledWebViewWithAlerts: View {
 }
 
 // MARK: - Alert Data Model
-struct AlertData : Equatable {
-  enum AlertType {
+struct AlertData: Equatable {
+  enum AlertType: Equatable {
     case alert, confirm, prompt
   }
   
+  let id = UUID() // Add unique identifier
   let type: AlertType
   let message: String
   let defaultText: String?
@@ -199,6 +193,14 @@ struct AlertData : Equatable {
     self.confirmCompletion = confirmCompletion
     self.promptCompletion = promptCompletion
   }
+  
+  // Equatable conformance - compare only data properties, not closures
+  static func == (lhs: AlertData, rhs: AlertData) -> Bool {
+    return lhs.id == rhs.id &&
+    lhs.type == rhs.type &&
+    lhs.message == rhs.message &&
+    lhs.defaultText == rhs.defaultText
+  }
 }
 
 // MARK: - Custom Alert Modifier
@@ -218,8 +220,8 @@ struct CustomAlertModifier: ViewModifier {
           onDismiss: { alertData = nil }
         )
       }
-    // !!@ Referencing instance method 'onChange(of:initial:_:)' on 'Optional' requires that 'AlertData' conform to 'Equatable'
-      .onChange(of: alertData) { _, newValue in
+    // !!@ removed _
+      .onChange(of: alertData) { newValue in
         if let data = newValue {
           textInput = data.defaultText ?? ""
         }
@@ -294,7 +296,7 @@ struct CustomAlertView: View {
 }
 
 // MARK: - Usage Examples
-struct ContentView1: View {
+struct WebViewAlertsView: View {
   var body: some View {
     NavigationView {
       VStack(spacing: 20) {
@@ -314,5 +316,17 @@ struct ContentView1: View {
 }
 
 #Preview {
-  ContentView1()
+  WebViewAlertsView()
 }
+
+/*
+ 
+ https://claude.ai/chat/6d205393-3949-4c29-8683-772c677510ca
+ handling alert in WKWebView
+ convert to swiftUI
+ Referencing instance method 'onChange(of:initial:_:)' on 'Optional' requires that 'AlertData' conform to 'Equatable'
+ Example url does not trigger alert, confirm or prompt
+ 
+
+
+ */
