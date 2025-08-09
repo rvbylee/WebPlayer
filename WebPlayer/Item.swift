@@ -1,3 +1,4 @@
+
 //
 //  Refs.swift
 //  WebPlayer
@@ -7,7 +8,11 @@
 
 
 let items = [
-  Item(label:"shapes random pause", ref:"https://jht9629-nyu.github.io/p5mirror-jht9629-nyu/p5projects/shapes%20random%20pause%20v22-n0LYuXRmX/?v=1"),
+  Item(label:"black facts - enter", ref:"https://molab-itp.github.io/moSalon/src/blackfacts/index.html?v=51&v=51&group=s1"),
+  Item(label:"black facts - daily", ref:"https://molab-itp.github.io/p5moLibrary/src/demo/BlackFacts/"),
+  Item(label:"black facts - moSalon", ref:"https://molab-itp.github.io/moSalon/src/black-enter/?v=51&group=s1"),
+  Item(label:"let-america-be", ref: "https://jht9629-nyu.github.io/let-america-be/src/qrcode/?group=s1"),
+  Item(label:"github.io shapes random pause", ref:"https://jht9629-nyu.github.io/p5mirror-jht9629-nyu/p5projects/shapes%20random%20pause%20v22-n0LYuXRmX/?v=1"),
   Item(label:"sketches/shapes_random_pause_v22", ref:"sketches/shapes_random_pause_v22/index.html"),
   Item(label:"shapes random pause n0LYuXRmX", ref:"https://editor.p5js.org/jht9629-nyu/sketches/n0LYuXRmX"),
   Item(label:"sketches/ims04-jht-scroll-color-v2/", ref:"sketches/ims04-jht-scroll-color-v2/index.html"),

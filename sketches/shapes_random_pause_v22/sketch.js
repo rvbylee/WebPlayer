@@ -3,7 +3,7 @@
 let my = {};
 let n, i, arr;
 function setup() {
-  my.nshapes = 6;
+  my.nshapes = 4;
   createCanvas(windowWidth, windowHeight);
   init_page();
   // frameRate(2);
