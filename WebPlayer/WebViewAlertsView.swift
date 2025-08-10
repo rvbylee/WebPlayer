@@ -461,18 +461,22 @@ struct TestWebView: View {
       if useCustomStyling {
         StyledWebViewWithAlerts(url: URL(string: "about:blank")!)
           .onAppear {
-            loadTestHTML()
+            // !!@ loadTestHTML disabled
+//            loadTestHTML()
           }
       } else {
         WebViewWithAlerts(url: URL(string: "about:blank")!)
           .onAppear {
-            loadTestHTML()
+//            loadTestHTML()
           }
       }
     }
     .navigationBarTitleDisplayMode(.inline)
   }
   
+  // !!@ loadTestHTML is suspect
+  // searching window hierarchy for WKWebView
+  //
   private func loadTestHTML() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
       // Find the webview and load HTML
@@ -485,7 +489,7 @@ struct TestWebView: View {
   
   private func loadHTMLInWebView(in viewController: UIViewController?) {
     guard let vc = viewController else { return }
-    
+    print("loadHTMLInWebView");
     // Recursively find WKWebView
     func findWebView(in view: UIView) -> WKWebView? {
       if let webView = view as? WKWebView {
@@ -514,3 +518,23 @@ struct TestWebView: View {
 #Preview {
   WebViewAlertsView()
 }
+
+/*
+ 
+ https://claude.ai/chat/6d205393-3949-4c29-8683-772c677510ca
+ handling alert in WKWebView
+ convert to swiftUI
+ Referencing instance method 'onChange(of:initial:_:)' on 'Optional' requires that 'AlertData' conform to 'Equatable'
+ Example url does not trigger alert, confirm or prompt
+ 
+
+
+ 
+ !!@ loadTestHTML disabled
+ !!@ Crash on re-enter alert view
+ 
+ Attempt to present <SwiftUI.PlatformAlertController: 0x102b6cc00> on <_TtGC7SwiftUI41StyleContextSplitViewNavigationControllerVS_14NoStyleContext_: 0x10583c700> (from <_TtGC7SwiftUI19UIHostingControllerVVS_19BridgedPresentation8RootView_: 0x10e93ca00>) whose view is not in the window hierarchy.
+
+ *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'Completion handler passed to -[_TtCV9WebPlayer7WebView11Coordinator webView:runJavaScriptConfirmPanelWithMessage:initiatedByFrame:completionHandler:] was not called'
+
+ */

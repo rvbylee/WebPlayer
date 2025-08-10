@@ -23,6 +23,9 @@ struct ContentView: View {
   var body: some View {
     NavigationView {
       List {
+        NavigationLink(destination: WebViewAlertsView()) {
+          Text("WebViewAlertsView")
+        }
         ForEach(items, id: \.ref) { item in
           NavigationLink( destination: ItemDetail(item: item, webRefModel: webRefModel)) {
             ItemRow(item: item)

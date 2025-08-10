@@ -27,6 +27,7 @@ class WebRefModel : NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessag
     webConfiguration.userContentController = webController;
     
     let wkWebView = WKWebView(frame: .zero, configuration: webConfiguration)
+    wkWebView.isInspectable = true;
     
     wkWebView.uiDelegate = self
     wkWebView.navigationDelegate = self
