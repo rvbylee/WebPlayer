@@ -18,7 +18,6 @@ struct WebRefView : UIViewRepresentable {
   }
   
   func updateUIView(_ uiView: WKWebView, context: Context) {
-      
     if ref.hasPrefix("https://") {
       loadURL(uiView)
     }

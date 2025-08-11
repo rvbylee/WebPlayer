@@ -6,8 +6,14 @@
 //  Created by jht2 on 8/8/25.
 //
 
+//   Item(label:"", ref:""),
+//
 
 let items = [
+  Item(label:"ims-03-jht truchet tiles pause v2", ref:"https://editor.p5js.org/jht9629-nyu/sketches/CYMdD77ySc"),
+  Item(label:"vote-no-fascism", ref:"https://molab-itp.github.io/moSalon/src/vote-no-fascism/?v=56"),
+  Item(label:"Technology by Vamoss", ref:"https://editor.p5js.org/jht9629-nyu/sketches/syH2Nh5RO"),
+  Item(label:"arc overlap free v29", ref:"https://editor.p5js.org/jht9629-nyu/sketches/oX_IJ2zVt"),
   Item(label:"black facts - enter", ref:"https://molab-itp.github.io/moSalon/src/blackfacts/index.html?v=51&v=51&group=s1"),
   Item(label:"black facts - daily", ref:"https://molab-itp.github.io/p5moLibrary/src/demo/BlackFacts/"),
   Item(label:"black facts - moSalon", ref:"https://molab-itp.github.io/moSalon/src/black-enter/?v=51&group=s1"),

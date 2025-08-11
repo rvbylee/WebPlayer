@@ -415,17 +415,14 @@ extension WebViewRepresentable {
   }
 }
 
-// MARK: - Preview
-//struct WebViewWithConsoleLogging_Previews: PreviewProvider {
-//  static var previews: some View {
-//    NavigationView {
-//      WebViewWithConsoleLogging()
-//    }
-//  }
-//}
-
 #Preview() {
   NavigationView {
     WebViewWithConsoleLogging()
   }
 }
+
+/*
+ https://claude.ai/chat/ee7280f6-724e-4d93-9992-68015f97212a
+ in WkWebView handle console.log calls
+ convert to swiftui
+ */
